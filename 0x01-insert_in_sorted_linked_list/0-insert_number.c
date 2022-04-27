@@ -1,48 +1,47 @@
+nes (43 sloc)  926 Bytes
+   
 #include <stdio.h>
 #include <stdlib.h>
 #include "lists.h"
 
 /**
- * insert_node - Function that add a
- * new node in a sorted single linked list
- * @head: Pointer to the head node
- * @number: Number to add
- * Return: The new node or Null if fail
+ * insert_node - Inserts a number into a sorted singly-linked list.
+ * @head: A pointer the head of the linked list.
+ * @number: The number to insert
+ * Return: If fails - NULL Otherwise - a pointer to the new node.
  */
 listint_t *insert_node(listint_t **head, int number)
 {
-	listint_t *new_node = NULL, *current = *head;
+	listint_t *newnode, *head2;
 
-	new_node = malloc(sizeof(listint_t));
-	if (!new_node || !head)
+	head2 = *head;
+	newnode = malloc(sizeof(listint_t));
+	if (newnode == NULL)
 		return (NULL);
-	new_node->n = number;
-	if (!*head)
+	newnode->n = number;
+	if (*head == NULL)
 	{
-		new_node->next = NULL;
-		*head = new_node;
-		return (new_node);
+		newnode->next = NULL;
+		*head = newnode;
+		return (newnode);
 	}
-	while (current)
+	if (head2->n > newnode->n)
 	{
-		if (!current->next)
-		{
-			if (current->n > number)
-				new_node->next = current;
-			else
-			{
-				current->next = new_node;
-				new_node->next = NULL;
-			}
-			return (new_node);
-		}
-		if (current->next->n >= number)
-		{
-			new_node->next = current->next;
-			current->next = new_node;
-			return (new_node);
-		}
-		current = current->next;
+		newnode->next = *head;
+		*head = newnode;
+		return (newnode);
 	}
-	return (NULL);
+	while (head2->next != NULL)
+	{
+		if (head2->next->n >= newnode->n)
+		{
+			newnode->next = head2->next;
+			head2->next = newnode;
+			return (newnode);
+		}
+		head2 = head2->next;
+	}
+	newnode->next = head2->next;
+	head2->next = newnode;
+	return (newnode);
 }
